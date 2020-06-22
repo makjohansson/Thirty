@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Thirty</string>
+    <string name="throw_button">Throw</string>
+    <string name="scoring">Select scoring</string>
+    <string name="round">First round</string>
+    <string name="pick_a_score">Pick A Score!!</string>
 </resources>
