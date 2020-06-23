@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -12,35 +14,43 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    //Tag for Logcat filter
     private static final String TAG = "MainActivity";
+    //Keys used by savedInstanceState
+    private static final String KEY_ROUND = "Round";
+    private static final String KEY_ROLLS = "Rolls";
+    private static final String KEY_DICES = "Dices";
 
     private int mRollsCounter = 0;
     private int mRoundCounter = 0;
     private final int NUMBER_OF_DICES = 6;
-    private Dice mDice;
     private Button mThrow;
     private ArrayList<Dice> mDicesList;
     private ImageButton mDiceOne, mDiceTwo, mDiceThree, mDiceFour, mDiceFive, mDiceSix;
     private boolean ismDiceOneClicked, ismDiceTwoClicked, ismDiceThreeClicked, ismDiceFourClicked,
             ismDiceFiveClicked, ismDiceSixClicked;
-    private Spinner mScoringChoices;
+    private Spinner spinner;
     private TextView mWhatRound;
+    private ScoreHandler mScorerHandler;
+    private ArrayAdapter<String> adapter;
 
-    //private int[] mDefaultDiceValues = new int[]{1, 2, 3, 4, 5, 6};
     private String[] mScoresOptions = new String[]
-            {"Low", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+            {"0", "Low", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+    List<String> scoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TextView at the top displaying what round the player is on.
-        mWhatRound = (TextView)findViewById(R.id.what_round);
 
         //Throw button, press and roll the dices
         mThrow = (Button)findViewById(R.id.throw_button);
@@ -50,17 +60,18 @@ public class MainActivity extends AppCompatActivity {
                 int message = 0;
                 if(mRollsCounter < 3 ) {
                     rollDices();
-                    Log.d(TAG, "clicked less than three times and in if");
+                    Log.d(TAG, "Throw number " + mRollsCounter);
                 } else {
-                    Log.d(TAG, "clicked three times and in else");
-                    mWhatRound.setText("Round " + ++mRoundCounter);
+                    Log.d(TAG, "Round " + mRoundCounter);
                     message = R.string.pick_a_score;
                     Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
 
+        onCreateDices();
+
+        //Identify image buttons
         mDiceOne = (ImageButton)findViewById(R.id.dice_one);
         mDiceTwo = (ImageButton)findViewById(R.id.dice_two);
         mDiceThree = (ImageButton)findViewById(R.id.dice_three);
@@ -69,18 +80,13 @@ public class MainActivity extends AppCompatActivity {
         mDiceSix = (ImageButton)findViewById(R.id.dice_six);
 
         if(savedInstanceState != null) {
-            ArrayList<Dice> theDices = savedInstanceState.getParcelableArrayList("Dices");
+            mRollsCounter = savedInstanceState.getInt(KEY_ROLLS, 0);
+            mRoundCounter = savedInstanceState.getInt(KEY_ROUND, 0);
+            ArrayList<Dice> theDices = savedInstanceState.getParcelableArrayList(KEY_DICES);
             for(int i = 0; i < NUMBER_OF_DICES; i++) {
-                Log.i(TAG, "value of dice " + theDices.get(i).getValue());
                 setDiceImage(theDices.get(i).getValue(), i);
             }
         } else {
-            mDiceOne = (ImageButton)findViewById(R.id.dice_one);
-            mDiceTwo = (ImageButton)findViewById(R.id.dice_two);
-            mDiceThree = (ImageButton)findViewById(R.id.dice_three);
-            mDiceFour = (ImageButton)findViewById(R.id.dice_four);
-            mDiceFive = (ImageButton)findViewById(R.id.dice_five);
-            mDiceSix = (ImageButton)findViewById(R.id.dice_six);
             rollDices();
         }
 
@@ -130,10 +136,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Spinner to pick what type of scoring to use
-        mScoringChoices = (Spinner)findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>
-                (this, R.layout.support_simple_spinner_dropdown_item, mScoresOptions);
-        mScoringChoices.setAdapter(adapter);
+        spinner = (Spinner)findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(this);
+        adapter = new ArrayAdapter<>
+                (this, R.layout.support_simple_spinner_dropdown_item, scoreList);
+        spinner.setAdapter(adapter);
+
+
+
+        //TextView at the top displaying what round the player is on.
+        mWhatRound = (TextView)findViewById(R.id.what_round);
+        if(mRoundCounter > 0)
+            mWhatRound.setText("Round " + mRoundCounter);
 
     }
 
@@ -143,7 +157,9 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("Dices", mDicesList);
+        outState.putParcelableArrayList(KEY_DICES, mDicesList);
+        outState.putInt(KEY_ROUND, mRoundCounter);
+        outState.putInt(KEY_ROLLS, mRollsCounter);
         super.onSaveInstanceState(outState);
     }
 
@@ -166,13 +182,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Roll the Dice, add value to ImageButton and add Dice to ArrayList
-     * used by onSaveInstanceState
+     * Roll the Dices, add value to ImageButtons and replace non clicked Dices in mDiceList
      */
     private void rollDices() {
-        mDicesList = new ArrayList<Dice>();
         mRollsCounter++;
-        mDice = new Dice();
         int diceValue = 0;
 
         boolean[] clickCheck = new boolean[]{ismDiceOneClicked, ismDiceTwoClicked,
@@ -183,8 +196,51 @@ public class MainActivity extends AppCompatActivity {
                 Dice die = new Dice();
                 diceValue = die.getValue();
                 setDiceImage(diceValue, i);
-                mDicesList.add(die);
+                mDicesList.set(i, die);
             }
         }
+    }
+
+    /**
+     * Fill mDicesList with 6 new dices.
+     */
+    private void onCreateDices() {
+        mDicesList = new ArrayList<>();
+        Dice die;
+        for(int i = 0; i < NUMBER_OF_DICES; i++) {
+            die = new Dice();
+            mDicesList.add(die);
+        }
+    }
+
+    private int[] getDiceValues() {
+        int[] arr = new int[NUMBER_OF_DICES];
+        for(int i = 0; i < NUMBER_OF_DICES; i++) {
+            arr[i] = mDicesList.get(i).getValue();
+        }
+        return arr;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String item = parent.getItemAtPosition(position).toString();
+
+        int scoringChoice = 0;
+        if(item == "Low")
+            scoringChoice = 3;
+        else
+            scoringChoice = Integer.parseInt(item);
+        scoreList.remove(position);
+        adapter.notifyDataSetChanged();
+        mScorerHandler = new ScoreHandler(scoringChoice, getDiceValues());
+        int score = mScorerHandler.getScoring();
+        Log.i(TAG, "Spinner " + scoringChoice + " selected");
+        Toast.makeText(parent.getContext(), "Score " + score, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
