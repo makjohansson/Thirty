@@ -19,10 +19,8 @@ public class ScoreHandler {
     }
 
     private void calcScore() {
-        for(int i = 0; i < diceValues.length; i++) {
-            if(scoringChoice == diceValues[i])
-                score += scoringChoice;
-        }
+        score += scoringChoice;
+
     }
 
 }

@@ -2,6 +2,7 @@ package se.umu.majo5632.thirty;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -27,9 +29,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String KEY_ROUND = "Round";
     private static final String KEY_ROLLS = "Rolls";
     private static final String KEY_DICES = "Dices";
+    private static final String KEY_MAP = "Map";
 
     private int mRollsCounter = 0;
-    private int mRoundCounter = 0;
+    private int mRoundCounter = 1;
+    private int mScore = 0;
     private final int NUMBER_OF_DICES = 6;
     private Button mThrow;
     private ArrayList<Dice> mDicesList;
@@ -43,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private String[] mScoresOptions = new String[]
             {"0", "Low", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    List<String> scoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
+    private List<String> scoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
+    private HashMap<String, Integer> mScoreMap;
 
 
     @Override
@@ -57,12 +62,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mThrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int message = 0;
-                if(mRollsCounter < 3 ) {
+                //TextView at the top displaying what round the player is on.
+                mWhatRound = (TextView)findViewById(R.id.what_round);
+
+                mWhatRound.setText("Round " + mRoundCounter);
+                if(mRoundCounter == 3) {
+                    mRoundCounter = 0;
+                    startResultActivity();
+                } else if(mRollsCounter < 3 ) {
                     rollDices();
                     Log.d(TAG, "Throw number " + mRollsCounter);
                 } else {
-                    Log.d(TAG, "Round " + mRoundCounter);
+                    int message = 0;
+                    Log.d(TAG, "Round " + ++mRoundCounter);
+
                     message = R.string.pick_a_score;
                     Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
@@ -82,12 +95,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if(savedInstanceState != null) {
             mRollsCounter = savedInstanceState.getInt(KEY_ROLLS, 0);
             mRoundCounter = savedInstanceState.getInt(KEY_ROUND, 0);
+            mScoreMap = (HashMap<String, Integer>) savedInstanceState.getSerializable(KEY_MAP);
             ArrayList<Dice> theDices = savedInstanceState.getParcelableArrayList(KEY_DICES);
             for(int i = 0; i < NUMBER_OF_DICES; i++) {
                 setDiceImage(theDices.get(i).getValue(), i);
             }
         } else {
             rollDices();
+            mScoreMap = new HashMap<>();
+            setMap();
         }
 
         //ImageButton's representing the dices
@@ -144,10 +160,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
 
-        //TextView at the top displaying what round the player is on.
-        mWhatRound = (TextView)findViewById(R.id.what_round);
-        if(mRoundCounter > 0)
-            mWhatRound.setText("Round " + mRoundCounter);
+
 
     }
 
@@ -160,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         outState.putParcelableArrayList(KEY_DICES, mDicesList);
         outState.putInt(KEY_ROUND, mRoundCounter);
         outState.putInt(KEY_ROLLS, mRollsCounter);
+        outState.putSerializable(KEY_MAP, mScoreMap);
         super.onSaveInstanceState(outState);
     }
 
@@ -213,6 +227,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Set the HashMap mScoreMap with value 0 for all scoring options
+     */
+    private void setMap() {
+        for(int i = 1; i < mScoresOptions.length; i++) {
+            mScoreMap.put(mScoresOptions[i], 0);
+        }
+    }
+
+    /**
+     * Return value of dices as an int array
+     * @return int array
+     */
     private int[] getDiceValues() {
         int[] arr = new int[NUMBER_OF_DICES];
         for(int i = 0; i < NUMBER_OF_DICES; i++) {
@@ -221,10 +248,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return arr;
     }
 
+    private void startResultActivity() {
+        Intent i = new Intent(MainActivity.this, ResultActivity.class);
+        i.putExtra(ResultActivity.EXTRA_SCORE, mScore);
+        i.putExtra(ResultActivity.EXTRA_MAP, mScoreMap);
+        startActivityForResult(i, 0);
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
-
         int scoringChoice = 0;
         if(item == "Low")
             scoringChoice = 3;
@@ -233,9 +266,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         scoreList.remove(position);
         adapter.notifyDataSetChanged();
         mScorerHandler = new ScoreHandler(scoringChoice, getDiceValues());
-        int score = mScorerHandler.getScoring();
+        mScore = mScorerHandler.getScoring();
+        mScoreMap.put(item, mScore);
+        mRollsCounter = 0;
         Log.i(TAG, "Spinner " + scoringChoice + " selected");
-        Toast.makeText(parent.getContext(), "Score " + score, Toast.LENGTH_SHORT).show();
+        Toast.makeText(parent.getContext(), "Score " + mScore, Toast.LENGTH_SHORT).show();
 
     }
 

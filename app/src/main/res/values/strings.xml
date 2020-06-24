@@ -3,5 +3,32 @@
     <string name="throw_button">Throw</string>
     <string name="scoring">Select scoring</string>
     <string name="round">First round</string>
+    <string name="choiceTitle">Choice</string>
+    <string name="scoreTitle">Score</string>
     <string name="pick_a_score">Pick A Score!!</string>
+    <string name="resultTitle">Final Results!!</string>
+    <string name="low_score_text">Low</string>
+    <string name="score_low">0</string>
+    <string name="four_score_text">4</string>
+    <string name="score_four">0</string>
+    <string name="five_score_text">5</string>
+    <string name="score_five">0</string>
+    <string name="six_score_text">6</string>
+    <string name="score_six">0</string>
+    <string name="seven_score_text">7</string>
+    <string name="score_seven">0</string>
+    <string name="eight_score_text">8</string>
+    <string name="score_eight">0</string>
+    <string name="nine_score_text">9</string>
+    <string name="score_nine">0</string>
+    <string name="ten_score_text">10</string>
+    <string name="score_ten">0</string>
+    <string name="eleven_score_text">11</string>
+    <string name="score_eleven">0</string>
+    <string name="twelve_score_text">12</string>
+    <string name="score_twelve">0</string>
+    <string name="final_score">Final score</string>
+    <string name="score_final">0</string>
+
+
 </resources>
