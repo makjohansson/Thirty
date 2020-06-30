@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,11 +14,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -27,10 +24,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String TAG = "MainActivity";
     //Keys used by savedInstanceState
     private static final String KEY_ROUND = "Round";
+    private static final String KEY_CLICKED = "Clicked";
     private static final String KEY_ROLLS = "Rolls";
     private static final String KEY_DICES = "Dices";
     private static final String KEY_MAP = "Map";
+    private static final String KEY_SCORE_LIST = "Score list";
 
+    private int spinnerCheck = 0;
     private int mRollsCounter = 0;
     private int mRoundCounter = 1;
     private int mScore = 0;
@@ -38,16 +38,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Button mThrow;
     private ArrayList<Dice> mDicesList;
     private ImageButton mDiceOne, mDiceTwo, mDiceThree, mDiceFour, mDiceFive, mDiceSix;
-    private boolean ismDiceOneClicked, ismDiceTwoClicked, ismDiceThreeClicked, ismDiceFourClicked,
-            ismDiceFiveClicked, ismDiceSixClicked;
+    private boolean[] mIsClicked;
     private Spinner spinner;
     private TextView mWhatRound;
     private ScoreHandler mScorerHandler;
     private ArrayAdapter<String> adapter;
 
     private String[] mScoresOptions = new String[]
-            {"0", "Low", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    private List<String> scoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
+            {"Pick Score", "Low", "4", "5", "6", "7", "8", "9", "10", "11", "12", "---"};
+    private ArrayList<String> mScoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
     private HashMap<String, Integer> mScoreMap;
 
 
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        setIsClickedArray();
         //Throw button, press and roll the dices
         mThrow = (Button)findViewById(R.id.throw_button);
         mThrow.setOnClickListener(new View.OnClickListener() {
@@ -64,19 +63,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 //TextView at the top displaying what round the player is on.
                 mWhatRound = (TextView)findViewById(R.id.what_round);
-
                 mWhatRound.setText("Round " + mRoundCounter);
-                if(mRoundCounter == 3) {
-                    mRoundCounter = 0;
+
+                if(mRoundCounter > 4) {
+                    reset();
                     startResultActivity();
                 } else if(mRollsCounter < 3 ) {
+                    mRollsCounter++;
                     rollDices();
                     Log.d(TAG, "Throw number " + mRollsCounter);
                 } else {
-                    int message = 0;
-                    Log.d(TAG, "Round " + ++mRoundCounter);
-
-                    message = R.string.pick_a_score;
+                    mRoundCounter++;
+                    Log.d(TAG, "Round " + mRoundCounter);
+                    setIsClickedArray();
+                    int message = R.string.pick_a_score;
                     Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             mRollsCounter = savedInstanceState.getInt(KEY_ROLLS, 0);
             mRoundCounter = savedInstanceState.getInt(KEY_ROUND, 0);
             mScoreMap = (HashMap<String, Integer>) savedInstanceState.getSerializable(KEY_MAP);
+            mIsClicked = savedInstanceState.getBooleanArray(KEY_CLICKED);
+            mScoreList = savedInstanceState.getStringArrayList(KEY_SCORE_LIST);
             ArrayList<Dice> theDices = savedInstanceState.getParcelableArrayList(KEY_DICES);
             for(int i = 0; i < NUMBER_OF_DICES; i++) {
                 setDiceImage(theDices.get(i).getValue(), i);
@@ -107,11 +109,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         //ImageButton's representing the dices
-        ismDiceOneClicked = false;
         mDiceOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ismDiceOneClicked = true;
+                if(mIsClicked[0]) {
+                    mIsClicked[0] = false;
+                    mDiceOne.setBackgroundResource(R.drawable.defualt_background);
+                } else {
+                    mIsClicked[0] = true;
+                    mDiceOne.setBackgroundResource(R.drawable.dice_background);
+
+                }
 
             }
         });
@@ -119,61 +127,103 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDiceTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ismDiceTwoClicked = true;
+                if(mIsClicked[1]) {
+                    mIsClicked[1] = false;
+                    mDiceTwo.setBackgroundResource(R.drawable.defualt_background);
+                } else {
+                    mIsClicked[1] = true;
+                    mDiceTwo.setBackgroundResource(R.drawable.dice_background);
+                }
             }
         });
 
         mDiceThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ismDiceThreeClicked = true;
+                if(mIsClicked[2]) {
+                    mIsClicked[2]= false;
+                    mDiceThree.setBackgroundResource(R.drawable.defualt_background);
+                } else {
+                    mIsClicked[2] = true;
+                    mDiceThree.setBackgroundResource(R.drawable.dice_background);
+                }
             }
         });
 
         mDiceFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    ismDiceFourClicked = true;
+                    if(mIsClicked[3]) {
+                        mIsClicked[3] = false;
+                        mDiceFour.setBackgroundResource(R.drawable.defualt_background);
+                    } else {
+                        mIsClicked[3] = true;
+                        mDiceFour.setBackgroundResource(R.drawable.dice_background);
+                    }
             }
         });
 
         mDiceFive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ismDiceFiveClicked = true;
+                if(mIsClicked[4]) {
+                    mIsClicked[4] = false;
+                    mDiceFive.setBackgroundResource(R.drawable.defualt_background);
+                } else {
+                    mIsClicked[4] = true;
+                    mDiceFive.setBackgroundResource(R.drawable.dice_background);
+                }
             }
         });
 
         mDiceSix.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ismDiceSixClicked = true;
+                if(mIsClicked[5]) {
+                    mIsClicked[5] = false;
+                    mDiceSix.setBackgroundResource(R.drawable.defualt_background);
+                } else {
+                    mIsClicked[5] = true;
+                    mDiceSix.setBackgroundResource(R.drawable.dice_background);
+                }
             }
         });
+
+
 
         //Spinner to pick what type of scoring to use
         spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
+
         adapter = new ArrayAdapter<>
-                (this, R.layout.support_simple_spinner_dropdown_item, scoreList);
+                (this, R.layout.support_simple_spinner_dropdown_item, mScoreList);
         spinner.setAdapter(adapter);
-
-
-
-
 
     }
 
-    /**
-     * To save Dices if the user flips the screen or exit the app
-     * @param outState
-     */
+    private void setIsClickedArray() {
+        mIsClicked = new boolean[6];
+        for(boolean i : mIsClicked) {
+            i = false;
+        }
+    }
+
+    private void reset() {
+        mRollsCounter = 0;
+        mRoundCounter = 1;
+        mScoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
+        setIsClickedArray();
+        rollDices();
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(KEY_DICES, mDicesList);
         outState.putInt(KEY_ROUND, mRoundCounter);
         outState.putInt(KEY_ROLLS, mRollsCounter);
+        outState.putBooleanArray(KEY_CLICKED, mIsClicked);
         outState.putSerializable(KEY_MAP, mScoreMap);
+        outState.putStringArrayList(KEY_SCORE_LIST, mScoreList);
         super.onSaveInstanceState(outState);
     }
 
@@ -192,6 +242,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 "drawable",
                 "se.umu.majo5632.thirty");
         dices[pos].setImageResource(newDice);
+        if(mIsClicked[pos]) {
+            dices[pos].setBackgroundResource(R.drawable.dice_background);
+        } else {
+            dices[pos].setBackgroundResource(R.drawable.defualt_background);
+        }
+
+    }
+
+    private void setPickedDice(){
 
     }
 
@@ -199,14 +258,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Roll the Dices, add value to ImageButtons and replace non clicked Dices in mDiceList
      */
     private void rollDices() {
-        mRollsCounter++;
         int diceValue = 0;
-
-        boolean[] clickCheck = new boolean[]{ismDiceOneClicked, ismDiceTwoClicked,
-                ismDiceThreeClicked, ismDiceFourClicked, ismDiceFiveClicked, ismDiceSixClicked};
-
         for(int i = 0; i < NUMBER_OF_DICES; i++) {
-            if(!clickCheck[i]) {
+            if(!mIsClicked[i]) {
                 Dice die = new Dice();
                 diceValue = die.getValue();
                 setDiceImage(diceValue, i);
@@ -237,13 +291,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * Return value of dices as an int array
+     * Return value of dices as an Arraylist<Integer>
      * @return int array
      */
-    private int[] getDiceValues() {
-        int[] arr = new int[NUMBER_OF_DICES];
+    private ArrayList<Integer> getDiceValues() {
+        ArrayList<Integer> arr = new ArrayList<Integer>();
         for(int i = 0; i < NUMBER_OF_DICES; i++) {
-            arr[i] = mDicesList.get(i).getValue();
+            arr.add( mDicesList.get(i).getValue());
         }
         return arr;
     }
@@ -257,21 +311,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String item = parent.getItemAtPosition(position).toString();
-        int scoringChoice = 0;
-        if(item == "Low")
-            scoringChoice = 3;
-        else
-            scoringChoice = Integer.parseInt(item);
-        scoreList.remove(position);
-        adapter.notifyDataSetChanged();
-        mScorerHandler = new ScoreHandler(scoringChoice, getDiceValues());
-        mScore = mScorerHandler.getScoring();
-        mScoreMap.put(item, mScore);
-        mRollsCounter = 0;
-        Log.i(TAG, "Spinner " + scoringChoice + " selected");
-        Toast.makeText(parent.getContext(), "Score " + mScore, Toast.LENGTH_SHORT).show();
-
+        ArrayAdapter adapter = (ArrayAdapter)spinner.getAdapter();
+        int pos = adapter.getPosition("Pick Score");
+        spinner.setSelection(pos);
+        if(++spinnerCheck > 1) {
+            String item = parent.getItemAtPosition(position).toString();
+            int scoringChoice = 0;
+            if(item ==  "---" || item == "Pick Score")
+                return;
+            if (item == "Low")
+                scoringChoice = 3;
+            else
+                scoringChoice = Integer.parseInt(item);
+            mScoreList.remove(position);
+            adapter.notifyDataSetChanged();
+            mScorerHandler = new ScoreHandler(scoringChoice, getDiceValues());
+            mScore = mScorerHandler.getScoring();
+            mScoreMap.put(item, mScore);
+            mRollsCounter = 0;
+            Log.i(TAG, "Spinner " + scoringChoice + " selected");
+            Toast.makeText(parent.getContext(), "Score " + mScore, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
