@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private final int ROUNDS = 10;
     private final int NUMBER_OF_DICES = 6;
     private int spinnerCheck = 0;
-    private int mRollsCounter = 0;
+    private Integer mRollsCounter = 0;
     private int mRoundCounter = 1;
     private int mScore = 0;
     private Button mThrow;
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             setMap();
         }
         //TextView at the top displaying what round the player is on.
-        if(mIsClicked[6] == true)
+        if(mIsClicked[6])
             mWhatRound.setText("Round " + mRoundCounter);
 
         //ImageButton's representing the dices
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDiceTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsClicked[6] == true) {
+                if(mIsClicked[6]) {
                     if (mIsClicked[1]) {
                         mIsClicked[1] = false;
                         mDiceTwo.setBackgroundResource(R.drawable.defualt_background);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDiceThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsClicked[6] == true) {
+                if(mIsClicked[6] ) {
                     if (mIsClicked[2]) {
                         mIsClicked[2] = false;
                         mDiceThree.setBackgroundResource(R.drawable.defualt_background);
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDiceFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsClicked[6] == true) {
+                if(mIsClicked[6]) {
                     if (mIsClicked[3]) {
                         mIsClicked[3] = false;
                         mDiceFour.setBackgroundResource(R.drawable.defualt_background);
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDiceFive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsClicked[6] == true) {
+                if(mIsClicked[6]) {
                     if (mIsClicked[4]) {
                         mIsClicked[4] = false;
                         mDiceFive.setBackgroundResource(R.drawable.defualt_background);
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDiceSix.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsClicked[6] == true) {
+                if(mIsClicked[6]) {
                     if (mIsClicked[5]) {
                         mIsClicked[5] = false;
                         mDiceSix.setBackgroundResource(R.drawable.defualt_background);
@@ -250,12 +250,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @return true if all dices are picked, else false
      */
     private boolean isAllDicesPicked() {
-        int counter = 0;
+        Integer counter = 0;
         for(int i = 0; i < mIsClicked.length - 1; i++) {
             if(mIsClicked[i] == true)
                 counter++;
         }
-        if(counter == 6)
+        if(counter.equals(6))
             return true;
         else
             return false;
@@ -339,9 +339,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private ArrayList<Integer> getDiceValues() {
         ArrayList<Integer> arr = new ArrayList<Integer>();
-        for(int i = 0; i < NUMBER_OF_DICES; i++) {
-            arr.add( mDicesList.get(i).getValue());
-        }
+        for(int i = 0; i < NUMBER_OF_DICES; i++) arr.add(mDicesList.get(i).getValue());
         return arr;
     }
 
@@ -362,15 +360,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * doing 3 rolls or picking all dices.
      */
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(mRollsCounter == 3 || isAllDicesPicked()) {
+        if(mRollsCounter.equals(3) || isAllDicesPicked()) {
             int pos = adapter.getPosition("Pick Score");
             spinner.setSelection(pos);
             if (++spinnerCheck > 1) {
                 String item = parent.getItemAtPosition(position).toString();
                 int scoringChoice = 0;
-                if (item == "---" || item == "Pick Score")
+                if (item.equals("---") || item.equals("Pick Score"))
                     return;
-                if (item == "Low") {
+                if (item.equals("Low")) {
                     scoringChoice = 3;
                 } else
                     scoringChoice = Integer.parseInt(item);
@@ -394,5 +392,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
 
 }

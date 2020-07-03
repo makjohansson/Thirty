@@ -68,8 +68,6 @@ public class ResultActivity extends AppCompatActivity {
      * sum the final score for a game of Thirty
      */
     private void calcFinalScore() {
-        for(int i : mScoreMap.values()) {
-            mScore +=  i;
-        }
+        for(int i : mScoreMap.values()) mScore = mScore + i;
     }
 }
