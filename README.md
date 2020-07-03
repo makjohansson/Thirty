@@ -26,6 +26,7 @@ LOw All dices with the value 3 or less gives score
 
 
 (Swedish -- Svenska)
+
 Beskrivning av spelet Thirty
 Thirty är ett tärningsspel inte helt olikt Yatzy där man slår sex tärningar i omgångar. Man får sedan slå om de man vill av tärningarna två gånger. 
 Vid varje omslag får spelaren välja vilka tärningar den vill behålla. Efter de tre slagen beräknar man poängen för tärningarna. 
