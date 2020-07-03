@@ -1,11 +1,12 @@
 # Thirty
 
-Description of the game Thirty<br>
+<b>Description of the game Thirty</b><br>
 Thirty is a dice game not that ulike Yatzy. The player roll six dices in rounds. The player can then choose what dices to roll again two more times, a total
 of three rolls. After the three rolls the player counts the points of the dices.
 The game containes of ten rounds like that. So totaly the player makes maximum Thirty rolls, there of the name on the game.
 <br>
-<b>Scoring</b>
+<br>
+<b>Scoring</b><br>
 At scoring the player choose what dices to count in specific round. Choices possible is presented in the table below.
 Every choice cna maximum be done one time during one game. At scoring a dice value only is allowed to be counted once.
 After the game is finished the players total score is presented as well as the score for each choice made during the game.
@@ -23,14 +24,13 @@ Low All dices with the value 3 or less gives score<br>
 12 All combinantions of one or more dices that gives the sum 4 gives score.<br>
 <br>
 <br>
-(Swedish -- Svenska)
-<br>
-Beskrivning av spelet Thirty
+(Swedish -- Svenska)<br>
+<b>Beskrivning av spelet Thirty</b><br>
 Thirty är ett tärningsspel inte helt olikt Yatzy där man slår sex tärningar i omgångar. Man får sedan slå om de man vill av tärningarna två gånger. 
 Vid varje omslag får spelaren välja vilka tärningar den vill behålla. Efter de tre slagen beräknar man poängen för tärningarna. 
 Ett spel består sedan av 10 stycken sådana rundor. Vi kommer alltså totalt göra maximalt 30 slag, därav namnet på spelet.
 <br>
-Poängsättning
+<b>Poängsättning</b>
 <br>
 Vid poängsättningen så väljer man vad som ska räknas i denna omgång. För möjliga val se tabellen nedan. 
 Varje val får göras maximalt en gång under ett spel. Vid poängräkningen får värdet av varje tärning räknas bara en gång. 
