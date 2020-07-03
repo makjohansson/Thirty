@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -55,13 +57,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayList<String> mScoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
     private HashMap<String, Integer> mScoreMap;
     private Toast mToast;
+    private ToastHandler mToastHandler;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mToastHandler = new ToastHandler(MainActivity.this, mToast);
         //Displays what round the player is on at the top of the screen
         mWhatRound = (TextView)findViewById(R.id.what_round);
         setIsClickedArray();
@@ -79,9 +82,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     mRollsCounter++;
                     rollDices();
                 } else {
-                    toaster(MainActivity.this, "Pick a score");
-                    //int message = R.string.pick_a_score;
-                    //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    mToastHandler.setText("Pick score");
+                    mToastHandler.display();
                 }
             }
         });
@@ -376,7 +378,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     scoringChoice = Integer.parseInt(item);
                 scoreHandler(scoringChoice);
                 scoreHasBeenSelectedSoResetAndSetValues(item, position);
-                toaster(parent.getContext(), "Score " + mScore);
+                toaster("Score " + mScore);
+
             }
         } else {
             int pos = adapter.getPosition("Pick Score");
@@ -387,6 +390,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void toaster(String textToDisplay) {
+        mToastHandler.setText(textToDisplay);
+        mToastHandler.display();
     }
 
     /**
@@ -413,13 +421,42 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setIsClickedArray();
     }
 
-    /**
+   /* *//**
      * Display a SHORT Toast
      * @param parent AdapterView to use with toaster
      * @param textToDisplay Text to display in Toast
-     */
+     *//*
     private void toaster(Context parent, String textToDisplay) {
-        mToast.makeText(parent, textToDisplay, Toast.LENGTH_SHORT).show();
+        if(mToast != null)
+            mToast.cancel();
+        mToast = mToast.makeText(parent, textToDisplay, Toast.LENGTH_SHORT);
+        setGravity();
+        mToast.show();
+
     }
+
+    *//**
+     * Set position for mToast on screen. A bit below center if Portrait orientation and at the
+     * bottom if landscape orientation
+     *//*
+    private void setGravity() {
+        if(checkOrientation())
+            mToast.setGravity(Gravity.BOTTOM, mToast.getXOffset() / 2, mToast.getYOffset() * 5);
+        else
+            mToast.setGravity(Gravity.BOTTOM, mToast.getXOffset() / 2, mToast.getYOffset() / 2);
+
+    }
+
+    *//**
+     * Check what orientation device is using
+     * @return true if Portrait orientation
+     *//*
+    private boolean checkOrientation() {
+        Integer mode = getResources().getConfiguration().orientation;
+        if(mode.equals(Configuration.ORIENTATION_PORTRAIT))
+            return true;
+        else
+            return false;
+    }*/
 
 }
