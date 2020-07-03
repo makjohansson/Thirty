@@ -13,7 +13,7 @@ After the game is finished the players total score is presented as well as the s
 
 Choices that counts(Sum of the choise including dices gives sorce)
 LOw All dices with the value 3 or less gives score
-4 All combinantions of one or more dices that gives the sum 4 gives score.
+4 All combinantions of one or more dices that gives the sum 4 gives score.<br>
 5 All combinantions of one or more dices that gives the sum 4 gives score.
 6 All combinantions of one or more dices that gives the sum 4 gives score.
 7 All combinantions of one or more dices that gives the sum 4 gives score.
