@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String KEY_MAP = "Map";
     private static final String KEY_SCORE_LIST = "Score list";
 
-    private final int ROUNDS = 10cd ;
+    private final int ROUNDS = 10;
     private final int NUMBER_OF_DICES = 6;
     private int spinnerCheck = 0;
     private int mRollsCounter = 0;
