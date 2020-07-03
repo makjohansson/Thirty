@@ -7,6 +7,7 @@ package se.umu.majo5632.thirty;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             {"Pick Score", "Low", "4", "5", "6", "7", "8", "9", "10", "11", "12", "---"};
     private ArrayList<String> mScoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
     private HashMap<String, Integer> mScoreMap;
+    private Toast mToast;
 
 
     @Override
@@ -77,8 +79,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     mRollsCounter++;
                     rollDices();
                 } else {
-                    int message = R.string.pick_a_score;
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    toaster(MainActivity.this, "Pick a score");
+                    //int message = R.string.pick_a_score;
+                    //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -355,8 +358,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     /**
-     * Handles the logic connected to the spinner. Remove scores picked, reset mRollsCounter
-     * increasing mScore using the class ScoreHandler and keep player from picking a score without
+     * Handles the logic connected to the spinner and keep player from picking a score without
      * doing 3 rolls or picking all dices.
      */
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -372,15 +374,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     scoringChoice = 3;
                 } else
                     scoringChoice = Integer.parseInt(item);
-                mScoreList.remove(position);
-                adapter.notifyDataSetChanged();
-                mScorerHandler = new ScoreHandler(scoringChoice, getDiceValues());
-                mScore = mScorerHandler.getScoring();
-                mScoreMap.put(item, mScore);
-                mRollsCounter = 0;
-                mRoundCounter++;
-                setIsClickedArray();
-                Toast.makeText(parent.getContext(), "Score " + mScore, Toast.LENGTH_SHORT).show();
+                scoreHandler(scoringChoice);
+                scoreHasBeenSelectedSoResetAndSetValues(item, position);
+                toaster(parent.getContext(), "Score " + mScore);
             }
         } else {
             int pos = adapter.getPosition("Pick Score");
@@ -393,6 +389,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * Set the mScore using the class ScoreHandler
+     * @param scoringChoice int value of the choice the player picked to use for scoring
+     */
+    private void scoreHandler(int scoringChoice) {
+        mScorerHandler = new ScoreHandler(scoringChoice, getDiceValues());
+        mScore = mScorerHandler.getScoring();
+    }
 
+    /**
+     * Set mRollsCounter = 0, increase mRoundCounter with one, put item score
+     * in HashMap mScoreMap, reset dices to unClicked, remove selected item from mScoreList
+     * and notifying adapter about changes made on spinner.
+     * @param item Key to score in mScoreMap
+     */
+    private void scoreHasBeenSelectedSoResetAndSetValues(String item, int position) {
+        mScoreList.remove(position);
+        adapter.notifyDataSetChanged();
+        mScoreMap.put(item, mScore);
+        mRollsCounter = 0;
+        mRoundCounter++;
+        setIsClickedArray();
+    }
+
+    /**
+     * Display a SHORT Toast
+     * @param parent AdapterView to use with toaster
+     * @param textToDisplay Text to display in Toast
+     */
+    private void toaster(Context parent, String textToDisplay) {
+        mToast.makeText(parent, textToDisplay, Toast.LENGTH_SHORT).show();
+    }
 
 }

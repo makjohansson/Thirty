@@ -1,5 +1,7 @@
 package se.umu.majo5632.thirty;
 
+import android.content.Intent;
+
 import java.util.ArrayList;
 
 /** Handle scoring for the Dice game Thirty
@@ -8,7 +10,8 @@ import java.util.ArrayList;
  */
 public class ScoreHandler {
 
-    private int scoringChoice;
+    private Integer sum = 0;
+    private Integer scoringChoice;
     private ArrayList<Integer> diceValues;
     private int score;
 
@@ -46,7 +49,7 @@ public class ScoreHandler {
             if(sumDices() < scoringChoice)
                 break;
             //Low score
-            if (scoringChoice == 3) {
+            if (scoringChoice.equals(3)) {
                 for (int i = 0; i < diceValues.size(); i++) {
                     if (diceValues.get(i) <= 3) {
                         score += diceValues.get(i);
@@ -56,7 +59,7 @@ public class ScoreHandler {
             } else {
                 //Check one dice
                 for (int i = 0; i < diceValues.size(); i++) {
-                    if (diceValues.get(i) == scoringChoice) {
+                    if (diceValues.get(i).equals(scoringChoice)) {
                         score += scoringChoice;
                         diceValues.remove(i);
                         i--;
@@ -71,8 +74,8 @@ public class ScoreHandler {
                     for (int j = i + 1; j < diceValues.size(); j++) {
                         if (i < 0)
                             i = 0;
-                        int sum = diceValues.get(i) + diceValues.get(j);
-                        if (sum == scoringChoice) {
+                         sum = diceValues.get(i) + diceValues.get(j);
+                        if (sum.equals(scoringChoice)) {
                             score += scoringChoice;
                             diceValues.remove(i);
                             diceValues.remove(j - 1);
@@ -93,8 +96,8 @@ public class ScoreHandler {
                         int k = j + 1;
                         if (k >= diceValues.size())
                             break;
-                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k);
-                        if (sum == scoringChoice) {
+                        sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k);
+                        if (sum.equals(scoringChoice)) {
                             score += scoringChoice;
                             diceValues.remove(i);
                             diceValues.remove(j - 1);
@@ -115,8 +118,8 @@ public class ScoreHandler {
                         int l = j + 2;
                         if (l >= diceValues.size())
                             break;
-                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k) + diceValues.get(l);
-                        if (sum == scoringChoice) {
+                        sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k) + diceValues.get(l);
+                        if (sum.equals(scoringChoice)) {
                             score += scoringChoice;
                             diceValues.remove(i);
                             diceValues.remove(j - 1);
@@ -138,9 +141,9 @@ public class ScoreHandler {
                         int m = j + 3;
                         if (m >= diceValues.size())
                             break;
-                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k)
+                        sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k)
                                 + diceValues.get(l) + diceValues.get(m);
-                        if (sum == scoringChoice) {
+                        if (sum.equals(scoringChoice)) {
                             score += scoringChoice;
                             diceValues.remove(i);
                             diceValues.remove(j - 1);
@@ -163,9 +166,9 @@ public class ScoreHandler {
                         int n = j + 4;
                         if (n >= diceValues.size())
                             break;
-                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k)
+                        sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k)
                                 + diceValues.get(l) + diceValues.get(m) + diceValues.get(n);
-                        if (sum == scoringChoice) {
+                        if (sum.equals(scoringChoice)) {
                             score += scoringChoice;
                             diceValues.remove(i);
                             diceValues.remove(j - 1);
