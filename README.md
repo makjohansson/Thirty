@@ -5,8 +5,7 @@ Thirty is a dice game not that ulike Yatzy. The player roll six dices in rounds.
 of three rolls. After the three rolls the player counts the points of the dices.
 The game containes of ten rounds like that. So totaly the player makes maximum Thirty rolls, there of the name on the game.
 <br>
-Scoring<br>
-
+<b>Scoring</b>
 At scoring the player choose what dices to count in specific round. Choices possible is presented in the table below.
 Every choice cna maximum be done one time during one game. At scoring a dice value only is allowed to be counted once.
 After the game is finished the players total score is presented as well as the score for each choice made during the game.
