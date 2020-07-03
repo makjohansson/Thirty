@@ -1,4 +1,7 @@
 package se.umu.majo5632.thirty;
+/** Represents a Dice.
+ * @author Marcus Johansson
+ */
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -27,10 +30,18 @@ public class Dice implements Parcelable {
         }
     };
 
+    /**
+     * Get Dice value
+     * @return Dice value as an int
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Random roll of dice
+     * @return int
+     */
     private int roll() {
         return (int)(Math.random()*6+1);
     }

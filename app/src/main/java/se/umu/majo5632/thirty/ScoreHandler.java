@@ -2,6 +2,10 @@ package se.umu.majo5632.thirty;
 
 import java.util.ArrayList;
 
+/** Handle scoring for the Dice game Thirty
+ * @author Marcus Johansson
+ * @version 1.0
+ */
 public class ScoreHandler {
 
     private int scoringChoice;
@@ -14,16 +18,27 @@ public class ScoreHandler {
         calcScore();
     }
 
+    /**
+     * Get the score from ScoreHandler
+     * @return score as an int
+     */
     public int getScoring() {
         return score;
     }
 
+    /**
+     * Sum the values of six dices
+     * @return the sum as an int
+     */
     private int sumDices() {
         int sum = 0;
         for (int i : diceValues) sum += i;
         return sum;
     }
 
+    /**
+     * Calculate score according to the rules of the dice game Thirty.
+     */
     private void calcScore() {
 
         while(!diceValues.isEmpty()) {
@@ -123,7 +138,8 @@ public class ScoreHandler {
                         int m = j + 3;
                         if (m >= diceValues.size())
                             break;
-                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k) + diceValues.get(l) + diceValues.get(m);
+                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k)
+                                + diceValues.get(l) + diceValues.get(m);
                         if (sum == scoringChoice) {
                             score += scoringChoice;
                             diceValues.remove(i);
@@ -147,7 +163,8 @@ public class ScoreHandler {
                         int n = j + 4;
                         if (n >= diceValues.size())
                             break;
-                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k) + diceValues.get(l) + diceValues.get(m) + diceValues.get(n);
+                        int sum = diceValues.get(i) + diceValues.get(j) + diceValues.get(k)
+                                + diceValues.get(l) + diceValues.get(m) + diceValues.get(n);
                         if (sum == scoringChoice) {
                             score += scoringChoice;
                             diceValues.remove(i);

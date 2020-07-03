@@ -1,4 +1,9 @@
 package se.umu.majo5632.thirty;
+/** Main activity for the Dice game Thirty
+ * Acting as the game controller, depending on the classes Dice and ScoreHandler.
+ * ResultActivity is the only child activity
+ * @author Marcus Johansson
+ */
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,12 +35,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String KEY_MAP = "Map";
     private static final String KEY_SCORE_LIST = "Score list";
 
-    private final int ROUNDS = 10;
+    private final int ROUNDS = 10cd ;
+    private final int NUMBER_OF_DICES = 6;
     private int spinnerCheck = 0;
     private int mRollsCounter = 0;
     private int mRoundCounter = 1;
     private int mScore = 0;
-    private final int NUMBER_OF_DICES = 6;
     private Button mThrow;
     private ArrayList<Dice> mDicesList;
     private ImageButton mDiceOne, mDiceTwo, mDiceThree, mDiceFour, mDiceFive, mDiceSix;
@@ -44,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView mWhatRound;
     private ScoreHandler mScorerHandler;
     private ArrayAdapter<String> adapter;
-
     private String[] mScoresOptions = new String[]
             {"Pick Score", "Low", "4", "5", "6", "7", "8", "9", "10", "11", "12", "---"};
     private ArrayList<String> mScoreList = new ArrayList<>(Arrays.asList(mScoresOptions));
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Displays what round the player is on at the top of the screen
         mWhatRound = (TextView)findViewById(R.id.what_round);
         setIsClickedArray();
         //Throw button, press and roll the dices
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDiceFive = (ImageButton)findViewById(R.id.dice_five);
         mDiceSix = (ImageButton)findViewById(R.id.dice_six);
 
+        //Data needed to be saved between screen flips and activity changes
         if(savedInstanceState != null) {
             mRollsCounter = savedInstanceState.getInt(KEY_ROLLS, 0);
             mRoundCounter = savedInstanceState.getInt(KEY_ROUND, 0);
@@ -95,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             mIsClicked = savedInstanceState.getBooleanArray(KEY_CLICKED);
             mScoreList = savedInstanceState.getStringArrayList(KEY_SCORE_LIST);
             ArrayList<Dice> theDices = savedInstanceState.getParcelableArrayList(KEY_DICES);
+            mWhatRound.setText("Round " + mRoundCounter);
             for(int i = 0; i < NUMBER_OF_DICES; i++) {
                 setDiceImage(theDices.get(i).getValue(), i);
             }
@@ -204,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * Setup spinner with the scoring choices from mScoreList
+     * Setup spinner with the scoring choices from mScoreList.
      */
     private void setupSpinner() {
         //Spinner to pick what type of scoring to use
@@ -216,11 +223,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setAdapter(adapter);
     }
 
+    /**
+     * Set the mIsClicked boolean array with the default value false.
+     */
     private void setIsClickedArray() {
         mIsClicked = new boolean[7];
         for(boolean i : mIsClicked) i = false;
     }
 
+    /**
+     * Reset the game when player returns from viewing the result and allow
+     * the player to play again.
+     */
     private void reset() {
         mRollsCounter = 0;
         mRoundCounter = 1;
@@ -231,6 +245,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         rollDices();
     }
 
+    /**
+     * Check if all dices are picked, to allow the player to pick a score
+     * @return true if all dices are picked, else false
+     */
     private boolean isAllDicesPicked() {
         int counter = 0;
         for(int i = 0; i < mIsClicked.length - 1; i++) {
@@ -255,7 +273,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     *
+     * Set dice image to corresponding dice value and set correct background basted on if
+     * player clicked the dice or not.
      * @param diceValue value of a dice
      * @param pos position of an ImageButton(0 -> 5)
      */
@@ -315,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     * Return value of dices as an Arraylist<Integer>
+     * Return value of dices as an ArrayList<Integer>
      * @return int array
      */
     private ArrayList<Integer> getDiceValues() {
@@ -326,6 +345,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return arr;
     }
 
+    /**
+     * Starts the child activity: ResultActivity
+     */
     private void startResultActivity() {
         Intent i = new Intent(MainActivity.this, ResultActivity.class);
         i.putExtra(ResultActivity.EXTRA_SCORE, mScore);
@@ -334,9 +356,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
+    /**
+     * Handles the logic connected to the spinner. Remove scores picked, reset mRollsCounter
+     * increasing mScore using the class ScoreHandler and keep player from picking a score without
+     * doing 3 rolls or picking all dices.
+     */
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(mRollsCounter == 3 || isAllDicesPicked()) {
-            //ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
             int pos = adapter.getPosition("Pick Score");
             spinner.setSelection(pos);
             if (++spinnerCheck > 1) {

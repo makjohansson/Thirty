@@ -1,10 +1,12 @@
 package se.umu.majo5632.thirty;
+/**Show the results in a table, is called when the Player of the Dice game Thirty
+ * played 10 rounds.
+ * @author Marcus Johansson
+ */
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.TextView;
-
 import java.util.HashMap;
 
 public class ResultActivity extends AppCompatActivity {
@@ -12,6 +14,7 @@ public class ResultActivity extends AppCompatActivity {
     //Tag for Logcat filter
     private static final String TAG = "ResultActivity";
 
+    //KEYS used by savedInstanceSate
     public static final String EXTRA_SCORE = "se.umu.majo5632.thirty.score";
     public static final String EXTRA_MAP = "se.umu.majo5632.thirty.map";
 
@@ -61,6 +64,9 @@ public class ResultActivity extends AppCompatActivity {
         mViewFinal.setText(""+mScore);
     }
 
+    /**
+     * sum the final score for a game of Thirty
+     */
     private void calcFinalScore() {
         for(int i : mScoreMap.values()) {
             mScore +=  i;
