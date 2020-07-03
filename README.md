@@ -14,14 +14,14 @@ After the game is finished the players total score is presented as well as the s
 Choices that counts(Sum of the choise including dices gives score<br>
 Low All dices with the value 3 or less gives score<br>
 4 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-5 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-6 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-7 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-8 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-9 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-10 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-11 All combinantions of one or more dices that gives the sum 4 gives score.<br>
-12 All combinantions of one or more dices that gives the sum 4 gives score.<br>
+5 All combinantions of one or more dices that gives the sum 5 gives score.<br>
+6 All combinantions of one or more dices that gives the sum 6 gives score.<br>
+7 All combinantions of one or more dices that gives the sum 7 gives score.<br>
+8 All combinantions of one or more dices that gives the sum 8 gives score.<br>
+9 All combinantions of one or more dices that gives the sum 9 gives score.<br>
+10 All combinantions of one or more dices that gives the sum 10 gives score.<br>
+11 All combinantions of one or more dices that gives the sum 11 gives score.<br>
+12 All combinantions of one or more dices that gives the sum 12 gives score.<br>
 <br>
 <br>
 (Swedish -- Svenska)<br>
