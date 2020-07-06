@@ -1,6 +1,6 @@
 package se.umu.majo5632.thirty;
 /**
- * Handles toast logic for the dice game Thirty
+ * Handles Toast displays for the dice game Thirty
  * @author Marcus Johansson
  */
 
@@ -20,7 +20,7 @@ public class ToastHandler {
     }
 
     /**
-     * Set text to be displayed by the toast
+     * Set text to be displayed by the Toast
      * @param textToDisplay
      */
     public void setText(String textToDisplay) {

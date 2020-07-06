@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if(mIsClicked[i] == true)
                 counter++;
         }
-        if(counter.equals(6))
+        if(counter.equals(6)) // NUMBER_OF_DICES ???
             return true;
         else
             return false;
@@ -392,6 +392,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * Set text to be displayed by Toast and display Toast
+     * @param textToDisplay
+     */
     private void toaster(String textToDisplay) {
         mToastHandler.setText(textToDisplay);
         mToastHandler.display();
@@ -402,8 +406,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param scoringChoice int value of the choice the player picked to use for scoring
      */
     private void scoreHandler(int scoringChoice) {
-        mScorerHandler = new ScoreHandler(scoringChoice, getDiceValues());
-        mScore = mScorerHandler.getScoring();
+        mScorerHandler = new ScoreHandler(getDiceValues(), scoringChoice );
+        mScore = mScorerHandler.getScore();
     }
 
     /**
@@ -420,43 +424,4 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mRoundCounter++;
         setIsClickedArray();
     }
-
-   /* *//**
-     * Display a SHORT Toast
-     * @param parent AdapterView to use with toaster
-     * @param textToDisplay Text to display in Toast
-     *//*
-    private void toaster(Context parent, String textToDisplay) {
-        if(mToast != null)
-            mToast.cancel();
-        mToast = mToast.makeText(parent, textToDisplay, Toast.LENGTH_SHORT);
-        setGravity();
-        mToast.show();
-
-    }
-
-    *//**
-     * Set position for mToast on screen. A bit below center if Portrait orientation and at the
-     * bottom if landscape orientation
-     *//*
-    private void setGravity() {
-        if(checkOrientation())
-            mToast.setGravity(Gravity.BOTTOM, mToast.getXOffset() / 2, mToast.getYOffset() * 5);
-        else
-            mToast.setGravity(Gravity.BOTTOM, mToast.getXOffset() / 2, mToast.getYOffset() / 2);
-
-    }
-
-    *//**
-     * Check what orientation device is using
-     * @return true if Portrait orientation
-     *//*
-    private boolean checkOrientation() {
-        Integer mode = getResources().getConfiguration().orientation;
-        if(mode.equals(Configuration.ORIENTATION_PORTRAIT))
-            return true;
-        else
-            return false;
-    }*/
-
 }
