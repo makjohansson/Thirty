@@ -17,6 +17,11 @@ public class ScoreHandler {
     private final Integer scoringChoice;
     private DiceChecker diceChecker;
 
+    /**
+     * Handels the score logic for the dice game Thirty
+     * @param diceValues ArrayList of dice values
+     * @param scoringChoice current scoringChoice
+     */
     public ScoreHandler(ArrayList<Integer> diceValues, int scoringChoice) {
         this.diceValues = diceValues;
         this.scoringChoice = scoringChoice;

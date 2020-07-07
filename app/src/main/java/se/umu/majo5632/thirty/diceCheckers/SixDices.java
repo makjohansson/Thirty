@@ -7,6 +7,12 @@ import java.util.ArrayList;
 
 public class SixDices extends DiceChecker {
 
+    /**
+     * Check dice combinations for six dices and calculate score
+     * @param diceValues
+     * @param score
+     * @param scoringChoice
+     */
     public SixDices(ArrayList<Integer> diceValues, int score, int scoringChoice) {
         super(diceValues, score, scoringChoice);
     }

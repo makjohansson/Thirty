@@ -20,6 +20,10 @@ public abstract class DiceChecker {
         calcScore();
     }
 
+    /**
+     * Get the dices that's in ArrayList diceValues
+     * @return current dice values
+     */
     public ArrayList<Integer> getDiceValues() {
         return diceValues;
     };

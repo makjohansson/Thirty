@@ -14,6 +14,11 @@ public class ToastHandler {
     private Context parent;
     private  String textToDisplay;
 
+    /**
+     * Handles how a toast will be presented in the dice game Thirty
+     * @param parent Current context
+     * @param mToast Toast object to use
+     */
     public ToastHandler(Context parent, Toast mToast) {
         this.parent = parent;
         this.mToast = mToast;

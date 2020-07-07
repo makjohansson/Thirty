@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -365,10 +366,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(mRollsCounter.equals(3) || isAllDicesPicked()) {
+            Log.i(TAG,"in the if");
             int pos = adapter.getPosition("Pick Score");
             spinner.setSelection(pos);
-            if (++spinnerCheck > 1) {
+            if (++spinnerCheck > 0) {
                 String item = parent.getItemAtPosition(position).toString();
+                Log.i(TAG,"in the if and spinner bigger then 1 so item is " + item);
                 int scoringChoice = 0;
                 if (item.equals("---") || item.equals("Pick Score"))
                     return;
@@ -379,11 +382,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 scoreHandler(scoringChoice);
                 scoreHasBeenSelectedSoResetAndSetValues(item, position);
                 toaster("Score " + mScore);
-
             }
         } else {
             int pos = adapter.getPosition("Pick Score");
             spinner.setSelection(pos);
+            Log.i(TAG,"in the else");
         }
     }
 
