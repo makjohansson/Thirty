@@ -1,6 +1,6 @@
 package se.umu.majo5632.thirty.diceCheckers;
 /**
- * Abstract class used to check al combinations of dices for the dice game Thirty
+ * Abstract class used to check all combinations of dices for the dice game Thirty
  * @author Marcus Johansson
  */
 
@@ -11,8 +11,13 @@ public abstract class DiceChecker {
     protected ArrayList<Integer> diceValues;
     protected int score;
 
-    
 
+    /**
+     * Abstract class used to check all combinations of dices for the dice game Thirty
+     * @param diceValues ArrayList of dice values
+     * @param score current score
+     * @param scoringChoice current scoringChoice
+     */
     public DiceChecker(ArrayList<Integer> diceValues, int score,int scoringChoice) {
         this.scoringChoice = scoringChoice;
         this.diceValues = diceValues;
